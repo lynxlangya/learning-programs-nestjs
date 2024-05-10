@@ -14,33 +14,15 @@ export class UsersService {
     { id: 2, name: 'Doe' },
   ];
 
-  findAll(): { message: string; data: IUser[] } {
-    return {
-      message: 'Users fetched successfully',
-      data: this.users,
-    };
+  findAll(): IUser[] {
+    return this.users;
   }
 
   findOne(id: number): IUser | { message: string } {
-    const user = this.users.find(({ id: userId }) => userId === id);
-
-    if (!user) {
-      return {
-        message: `User with id ${id} not found`,
-      };
-    }
-
-    return user;
+    return this.users.find(({ id: userId }) => userId === id);
   }
 
   create(user: IUser) {
-    // 检查是否已存在
-    if (this.users.find(({ name }) => name === user.name)) {
-      return {
-        message: `User with name ${user.name} already exists`,
-      };
-    }
-
     // 创建
     user.id = this.users.length + 1;
 
@@ -57,7 +39,7 @@ export class UsersService {
     const index = this.users.findIndex(({ id }) => id === user.id);
 
     // 检查是否存在
-    if (index === -1) {
+    if (!checkId(user.id, this.users)) {
       return {
         message: `User with id ${user.id} not found`,
       };
@@ -69,19 +51,26 @@ export class UsersService {
     };
   }
 
-  remove(userId: number) {
-    const index = this.users.findIndex(({ id }) => id === userId);
+  remove(id: number) {
+    const index = this.users.findIndex(({ id }) => id === id);
 
     // 检查是否存在
-    if (index === -1) {
+    if (!checkId(id, this.users)) {
       return {
-        message: `User with id ${userId} not found`,
+        message: `User with id ${id} not found`,
       };
     }
 
     this.users.splice(index, 1);
     return {
-      message: `User with id ${userId} removed successfully`,
+      message: `User with id ${id} removed successfully`,
     };
   }
+}
+
+// 封装公共方法，检查 id 是否存在
+function checkId(id: number, users: IUser[]) {
+  const index = users.findIndex(({ id: userId }) => userId === id);
+
+  return index === -1;
 }
