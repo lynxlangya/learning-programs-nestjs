@@ -17,7 +17,7 @@ export class UsersController {
 
   // The @Get() decorator tells Nest that the findAll() method should be called when a GET request is made to the /users route.
   @Get()
-  findAll(): IUser[] {
+  findAll(): { message: string; data: IUser[] } {
     // Use the User type as the return type
     return this.usersService.findAll();
   }
@@ -36,7 +36,7 @@ export class UsersController {
 
   // The @Delete() decorator tells Nest that the remove() method should be called when a DELETE request is made to the /users route.
   @Delete()
-  remove(@Body() userId: number) {
+  remove(@Param('id') userId: number) {
     return this.usersService.remove(userId);
   }
 
