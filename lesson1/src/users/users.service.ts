@@ -14,15 +14,35 @@ export class UsersService {
     { id: 2, name: 'Doe' },
   ];
 
-  findAll(): IUser[] {
-    return this.users;
+  findAll(): {
+    message: string;
+    data: IUser[];
+  } {
+    // return this.users;
+    return {
+      message: 'Users fetched successfully',
+      data: this.users,
+    };
   }
 
   findOne(id: number): IUser | { message: string } {
+    if (!checkId(id, this.users)) {
+      return {
+        message: `User with id ${id} not found`,
+      };
+    }
+
     return this.users.find(({ id: userId }) => userId === id);
   }
 
   create(user: IUser) {
+    // 检查是否已存在
+    if (this.users.find(({ name }) => name === user.name)) {
+      return {
+        message: `User with name ${user.name} already exists`,
+      };
+    }
+
     // 创建
     user.id = this.users.length + 1;
 
