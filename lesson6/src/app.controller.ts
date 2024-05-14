@@ -1,22 +1,15 @@
-import {
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  UseFilters,
-} from '@nestjs/common';
+import { Controller, Get, NotFoundException, UseFilters } from '@nestjs/common';
 import { AppService } from './app.service';
-import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
+import { NotFoundExceptionFilter } from './filters/not-found-exception/not-found-exception.filter';
 
 @Controller()
-@UseFilters(new HttpExceptionFilter())
+@UseFilters(NotFoundExceptionFilter)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello() {
-    throw new HttpException('Forbidden', HttpStatus.BAD_GATEWAY);
-
-    // return this.appService.getHello();
+  @Get('/:id')
+  findOne() {
+    // 假设这里发生了找不到用户的情况
+    throw new NotFoundException('User not found');
   }
 }
