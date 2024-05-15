@@ -12,3 +12,4 @@ This repository contains the code for the learning programs in Nest.js.
 - [Lesson 4](https://adventurous-moth-ea0.notion.site/a0a7d5b2947a4a0db2ef0f9b7e775daa?pvs=4)
 - [Lesson 5](https://adventurous-moth-ea0.notion.site/1f14a1e281c34ac29c7cf89d8a843ee1?pvs=4)
 - [Lesson 6](https://adventurous-moth-ea0.notion.site/7516ffa15d464aa9b86e0ec3eb4ddf6f?pvs=4)
+- [Lesson 7](https://adventurous-moth-ea0.notion.site/ORM-Prisma-c13ef813af104cbe8552e99befcded67?pvs=4)
