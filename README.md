@@ -13,3 +13,4 @@ This repository contains the code for the learning programs in Nest.js.
 - [Lesson 5 管道与拦截器](https://adventurous-moth-ea0.notion.site/1f14a1e281c34ac29c7cf89d8a843ee1?pvs=4)
 - [Lesson 6 过滤器与异常处理](https://adventurous-moth-ea0.notion.site/7516ffa15d464aa9b86e0ec3eb4ddf6f?pvs=4)
 - [Lesson 7 数据库与 ORM 集成-Prisma](https://adventurous-moth-ea0.notion.site/ORM-Prisma-c13ef813af104cbe8552e99befcded67?pvs=4)
+- [Lesson 8 身份认证与授权](https://adventurous-moth-ea0.notion.site/1735cfc0f33d40f1a1cb3bc821dcbcf8?pvs=4)
