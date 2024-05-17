@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chat Test</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  </head>
+  <body>
+    <h1>Chat Test</h1>
+    <div id="messages"></div>
+    <input
+      id="messageInput"
+      type="text"
+      placeholder="Enter your message here..."
+    />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+
+      /** 
+       * 启动WebSocket客户端
+       * 1. 提前安装 http-server 服务 npm install -g http-server
+       * 2. 启动服务 npx http-server ./
+       * 3. 打开浏览器访问 http://localhost:8080
+       */
+      const socket = io('ws://localhost:3000/'); // 确认路径是否正确
+      socket.on('connect', () => {
+        console.log('Connected to WebSocket server');
+      });
+
+      socket.on('message', (data) => {
+        console.log('Received message:', data);
+        const messages = document.getElementById('messages');
+        const message = document.createElement('div');
+        message.innerText = `${data.sender}: ${data.message} -> Time:[${data.timestamp}]`;
+        messages.appendChild(message);
+      });
+
+      function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value;
+        socket.emit('message', { sender: 'User', message });
+        input.value = '';
+      }
+    </script>
+  </body>
+</html>
