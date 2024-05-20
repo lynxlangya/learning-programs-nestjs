@@ -5,7 +5,20 @@ import { CreateUserInput } from './dto/create-user.input';
 
 @Resolver(() => User)
 export class UserResolver {
-  private userList: User[] = [];
+  private userList: User[] = [
+    {
+      id: '1',
+      name: '张三',
+      age: 18,
+      posts: [],
+    },
+    {
+      id: '2',
+      name: '李四',
+      age: 20,
+      posts: [],
+    },
+  ];
 
   /**
    * 获取用户列表
