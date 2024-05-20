@@ -11,6 +11,7 @@ import { UserResolver } from './user/user.resolver';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // 自动创建 schema.gql 文件
+      installSubscriptionHandlers: true, // 启用订阅
     }),
   ],
   controllers: [AppController],

@@ -1,8 +1,10 @@
 // Path: lesson10/src/user/user.resolver.ts
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { User } from './user.model';
 import { CreateUserInput } from './dto/create-user.input';
 
+const pubSub = new PubSub();
 @Resolver(() => User)
 export class UserResolver {
   private userList: User[] = [
@@ -57,6 +59,17 @@ export class UserResolver {
       posts: [],
     };
     this.userList.push(user);
+
+    await pubSub.publish('userCreated', { userCreated: user }); // 发布用户创建事件
+
     return user;
+  }
+
+  /**
+   * 订阅用户创建事件
+   */
+  @Subscription(() => User)
+  userCreated() {
+    return pubSub.asyncIterator('userCreated');
   }
 }
