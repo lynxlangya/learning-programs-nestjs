@@ -15,3 +15,4 @@ This repository contains the code for the learning programs in Nest.js.
 - [Lesson 7 数据库与 ORM 集成-Prisma](https://adventurous-moth-ea0.notion.site/ORM-Prisma-c13ef813af104cbe8552e99befcded67?pvs=4)
 - [Lesson 8 身份认证与授权](https://adventurous-moth-ea0.notion.site/1735cfc0f33d40f1a1cb3bc821dcbcf8?pvs=4)
 - [Lesson 9 实时通信与 WebSocket](https://adventurous-moth-ea0.notion.site/WebSocket-4a57e2c3a301432a8c9d02d4568c6517?pvs=4)
+- [Lesson 10 GraphQL 集成](https://adventurous-moth-ea0.notion.site/GraphQL-fe18d4e31ad14810978875079b0aba8d?pvs=4)
