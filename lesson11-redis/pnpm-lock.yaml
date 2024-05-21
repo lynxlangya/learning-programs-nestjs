@@ -29,6 +29,12 @@ importers:
       cache-manager-redis-store:
         specifier: ^3.0.1
         version: 3.0.1
+      cache-manager-redis-yet:
+        specifier: ^5.0.0
+        version: 5.0.0
+      redis:
+        specifier: ^4.6.14
+        version: 4.6.14
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
@@ -996,6 +1002,10 @@ packages:
   cache-manager-redis-store@3.0.1:
     resolution: {integrity: sha512-o560kw+dFqusC9lQJhcm6L2F2fMKobJ5af+FoR2PdnMVdpQ3f3Bz6qzvObTGyvoazQJxjQNWgMQeChP4vRTuXQ==}
     engines: {node: '>= 16.18.0'}
+
+  cache-manager-redis-yet@5.0.0:
+    resolution: {integrity: sha512-ooBCA71CVUFPoLBx54vig0zhEe5yLcGDQmy9FGS1lBm0wc/efccC+KHdW9mURbuAtL7bi4mRiDA0bHg1a3Vbhw==}
+    engines: {node: '>= 18'}
 
   cache-manager@5.5.2:
     resolution: {integrity: sha512-HozSRPCBB26O1ZVIzX8GjauYMoZOpWcArqRIFlPKr+Mm3o+p/6VcHxRt8ia0F/tMwZdKxpHG0M+Am5Qh9FmfKw==}
@@ -4048,6 +4058,17 @@ snapshots:
 
   cache-manager-redis-store@3.0.1:
     dependencies:
+      redis: 4.6.14
+
+  cache-manager-redis-yet@5.0.0:
+    dependencies:
+      '@redis/bloom': 1.2.0(@redis/client@1.5.16)
+      '@redis/client': 1.5.16
+      '@redis/graph': 1.1.1(@redis/client@1.5.16)
+      '@redis/json': 1.0.6(@redis/client@1.5.16)
+      '@redis/search': 1.1.6(@redis/client@1.5.16)
+      '@redis/time-series': 1.0.5(@redis/client@1.5.16)
+      cache-manager: 5.5.2
       redis: 4.6.14
 
   cache-manager@5.5.2:
