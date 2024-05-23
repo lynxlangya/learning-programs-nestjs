@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Roles
+// @default("USER") 为默认值
+enum Role {
+  // 管理员
+  ADMIN
+  // 普通用户
+  NORMAL
+  // 游客
+  GUEST
+}
+
+// Task Status
+// @default("TODO") 为默认值
+enum Status {
+  // 待办
+  TODO
+  // 进行中
+  DOING
+  // 已完成
+  DONE
+}
+
+// --------------------------------------
+// User Model definitions
+// --------------------------------------
+model User {
+  id            String   @id @default(cuid())
+  username      String   @unique
+  password      String
+  role          Role     @default(NORMAL)
+  name          String?
+  email         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  // 使用 @relation("TaskCreator") 关联到 Task 模型中的 creator 字段 - 表示该用户创建的任务
+  tasksCreated  Task[]   @relation("TaskCreator")
+  // 使用 @relation("TaskAssignee") 关联到 Task 模型中的 assignee 字段 - 表示该用户被分配的任务
+  tasksAssigned Task[]   @relation("TaskAssignee")
+}
+
+model Task {
+  taskId         String    @id @default(cuid())
+  taskTitle      String
+  status         Status    @default(TODO)
+  content        String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  // 完成时间，可为空，状态切换为已完成时生成当前时间
+  finishAt       DateTime?
+  // 截止时间
+  deadlineAt     DateTime?
+  // 任务分类
+  classification String?
+  // 任务封面
+  taskCover      String?
+  // 任务标签
+  tags           String[]
+  // 任务创建者
+  creator        User      @relation("TaskCreator", fields: [creatorId], references: [id])
+  creatorId      String
+  // 任务执行者
+  assignee       User?     @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  assigneeId     String?
+}
+
+// // 查询某个用户创建的所有任务
+// const userWithCreatedTasks = await prisma.user.findUnique({
+//   where: { id: userId },
+//   include: { tasksCreated: true },
+// });
+
+// // 查询某个用户被分配的所有任务
+// const userWithAssignedTasks = await prisma.user.findUnique({
+//   where: { id: userId },
+//   include: { tasksAssigned: true },
+// });
+
+// // 查询某个任务的创建者和执行者
+// const taskWithCreatorAndAssignee = await prisma.task.findUnique({
+//   where: { taskId: taskId },
+//   include: { creator: true, assignee: true },
+// });
+
+// // 查询用户创建的任务和被分配的任务
+// const userWithTasks = await prisma.user.findUnique({
+//   where: { id: userId },
+//   include: { tasksCreated: true, tasksAssigned: true },
+// });
