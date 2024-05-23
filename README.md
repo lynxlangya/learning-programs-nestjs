@@ -17,3 +17,7 @@ This repository contains the code for the learning programs in Nest.js.
 - [Lesson 9 实时通信与 WebSocket](https://adventurous-moth-ea0.notion.site/WebSocket-4a57e2c3a301432a8c9d02d4568c6517?pvs=4)
 - [Lesson 10 GraphQL 集成](https://adventurous-moth-ea0.notion.site/GraphQL-fe18d4e31ad14810978875079b0aba8d?pvs=4)
 - [Lesson 11 缓存与性能优化](https://adventurous-moth-ea0.notion.site/6ddedbd6018e4bc1b2fc846104af958a?pvs=4)
+
+## 实战项目 - Task Manager 「在线任务管理系统」
+
+- [Task Manager](https://adventurous-moth-ea0.notion.site/Task-Manager-bcc7d80a085545bc82f03cd00f2716da?pvs=4)
