@@ -87,12 +87,15 @@ export class UserService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
     console.log(updateUserDto);
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<User | ApiResponse<null | string>> {
+    const user = await this.prisma.user.delete({
+      where: { id },
+    });
+    return successRes(user.name + ' has been deleted');
   }
 }
