@@ -27,11 +27,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: {
     sub: number;
     username: string;
+    role: string;
     iat: number;
     exp: number;
   }) {
     // 基于 JWT Token 的 payload 生成用户信息对象
     Logger.log(`JWT payload: ${JSON.stringify(payload)}`);
-    return { userId: payload.sub, username: payload.username };
+    return {
+      userId: payload.sub,
+      username: payload.username,
+      role: payload.role,
+    };
   }
 }

@@ -35,8 +35,7 @@ export class AuthService {
    * @returns The signed JWT Token
    */
   async login(user: User) {
-    Logger.log(`User ${user} logged in`);
-    console.log(user);
+    Logger.log(`User ${user.username} is logging in...`);
     // 查找用户的角色
     const userRole = await this.usersService.findOneByUsername(user.username);
     console.log(userRole);
