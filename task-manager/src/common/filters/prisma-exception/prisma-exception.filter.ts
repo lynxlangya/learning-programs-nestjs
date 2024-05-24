@@ -9,6 +9,20 @@ import { Response } from 'express';
 import { failRes } from '@/common/utils';
 import { ServerResponseCode } from '@/common/enums';
 
+enum PrismaErrorCode {
+  /**
+   * 未找到资源
+   * @see https://www.prisma.io/docs/orm/reference/error-reference#p2025
+   */
+  NotFound = 'P2025',
+
+  /**
+   * 输入错误
+   * @see https://www.prisma.io/docs/orm/reference/error-reference#p2019
+   */
+  InputError = 'P2019',
+}
+
 /**
  * Prisma Exception Filter - 统一处理 Prisma 异常
  */
@@ -22,9 +36,19 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = exception.message;
 
-    if (exception.code === 'P2025') {
-      status = HttpStatus.NOT_FOUND;
-      message = 'Resource not found - 「资源不存在」';
+    switch (exception.code) {
+      case PrismaErrorCode.NotFound:
+        status = HttpStatus.NOT_FOUND;
+        message = 'Resource not found - 「资源不存在」';
+        break;
+      case PrismaErrorCode.InputError:
+        status = HttpStatus.BAD_REQUEST;
+        message = 'Input error - 「输入错误」';
+        break;
+      default:
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        message = 'unknown error - 「未知错误」';
+        break;
     }
 
     response
