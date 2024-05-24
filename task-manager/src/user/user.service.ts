@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
 import { QueryUserDto } from './dto/query-user.dto';
+import { ApiResponse } from '@/common/interfaces';
+import { successRes, failRes } from '@/common/utils';
+import { ServerResponseCode } from '@/common/enums';
 
 @Injectable()
 export class UserService {
@@ -11,26 +14,28 @@ export class UserService {
 
   async create(
     createUserDto: CreateUserDto,
-  ): Promise<User | { error: string }> {
+  ): Promise<User | ApiResponse<null | string>> {
     // Check if the username is already taken
     const existingUser = await this.findUserByUsername(
       createUserDto.username.toLowerCase().trim(),
     );
 
-    // TODO: 错误处理后期需要统一，错误状态码、错误信息等
     if (existingUser) {
-      return {
-        error: 'Username already taken - 「用户名已存在」',
-      };
+      return failRes(
+        ServerResponseCode.BAD_REQUEST,
+        'Username already taken - 「用户名已存在」',
+      );
     }
 
-    return this.prisma.user.create({
+    await this.prisma.user.create({
       data: {
         ...createUserDto,
         username: createUserDto.username.toLowerCase().trim(),
         password: createUserDto.password.trim(),
       },
     });
+
+    return successRes(null);
   }
 
   async findUserByUsername(username: string): Promise<User | null> {
