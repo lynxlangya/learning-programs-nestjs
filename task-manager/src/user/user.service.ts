@@ -89,7 +89,7 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-      this.prisma.user.update({
+      await this.prisma.user.update({
         where: { id },
         data: updateUserDto,
       });
@@ -97,7 +97,7 @@ export class UserService {
     } catch (error) {
       return failRes(
         ServerResponseCode.INTERNAL_SERVER_ERROR,
-        'Failed to update user',
+        'Failed to update user - 「更新用户失败」',
       );
     }
   }
