@@ -5,10 +5,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { UserService } from '@/user/user.service';
+import { failRes } from '@/common/utils';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // 从请求头中提取 JWT Token
       ignoreExpiration: false, // 不忽略 Token 过期
@@ -25,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param exp Token 过期时间
    */
   async validate(payload: {
-    sub: number;
+    sub: string;
     username: string;
     role: string;
     iat: number;
@@ -33,10 +35,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }) {
     // 基于 JWT Token 的 payload 生成用户信息对象
     Logger.log(`JWT payload: ${JSON.stringify(payload)}`);
-    return {
-      userId: payload.sub,
-      username: payload.username,
-      role: payload.role,
-    };
+
+    const user = await this.userService.findOneById(payload.sub);
+    if (!user) {
+      return failRes(401, 'Unauthorized - 「未授权」');
+    }
+
+    return user;
   }
 }

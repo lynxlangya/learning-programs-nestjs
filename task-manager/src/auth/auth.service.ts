@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { User } from '@prisma/client';
+import { successRes } from '@/common/utils';
 
 @Injectable()
 export class AuthService {
@@ -22,9 +23,9 @@ export class AuthService {
   ): Promise<User | string> {
     const user = await this.usersService.findUserByUsername(username);
 
-    if (!user) return 'User not found';
+    if (!user) return 'User not found - 「用户不存在」';
 
-    if (user?.password !== password) return 'Password incorrect';
+    if (user?.password !== password) return 'Password incorrect - 「密码错误」';
 
     return user;
   }
@@ -40,10 +41,10 @@ export class AuthService {
     const userRole = await this.usersService.findOneByUsername(user.username);
     console.log(userRole);
 
-    if (!userRole) return { error: 'User not found' };
+    if (!userRole) return { error: 'User not found - 「用户不存在」' };
 
     if (userRole.password !== user.password)
-      return { error: 'Password incorrect' };
+      return { error: 'Password incorrect - 「密码错误」' };
 
     const payload = {
       username: userRole.username,
@@ -51,10 +52,9 @@ export class AuthService {
       role: userRole.role,
     };
 
-    return {
-      // Generate a signed JWT Token
+    return successRes({
       access_token: this.jwtService.sign(payload),
-    };
+    });
   }
 
   /**
