@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -14,6 +15,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { JwtAuthGuard } from '@/common/guard';
 import { CurrentUser } from '@/common/decorators';
 import { User } from '@prisma/client';
+import { QueryTaskDto } from './dto/query-task.dto';
 // import { failRes, successRes } from '@/common/utils';
 // import { ServerResponseCode } from '@/common/enums';
 
@@ -28,17 +30,11 @@ export class TaskController {
     @CurrentUser() currentUser: User,
   ) {
     return this.taskService.create(createTaskDto, currentUser);
-    // try {
-    //   const task = await this.taskService.create(createTaskDto, currentUser);
-    //   return successRes(task);
-    // } catch (error) {
-    //   return failRes(ServerResponseCode.INTERNAL_SERVER_ERROR, error.message);
-    // }
   }
 
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  findAll(@Query() query: QueryTaskDto, @CurrentUser() currentUser: User) {
+    return this.taskService.findAll(query, currentUser);
   }
 
   @Get(':id')
