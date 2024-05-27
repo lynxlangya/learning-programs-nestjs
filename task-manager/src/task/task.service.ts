@@ -79,17 +79,6 @@ export class TaskService {
     };
   }
 
-  // currentUser: User,
-  // ): Promise<
-  //   | {
-  //       list: Task[];
-  //       total: string;
-  //       pageSize: string;
-  //       pageNum: string;
-  //     }
-  //   | ApiResponse<null | string>
-  // >
-
   async findOneByTaskId(
     taskId: string,
     currentUser: User,
