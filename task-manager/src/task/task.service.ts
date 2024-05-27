@@ -44,8 +44,6 @@ export class TaskService {
       }
     | ApiResponse<null | string>
   > {
-    console.log(query);
-    console.log(currentUser);
     if (currentUser.role === Role.GUEST)
       return failRes(
         ServerResponseCode.FORBIDDEN,
@@ -79,6 +77,41 @@ export class TaskService {
       pageSize,
       pageNum,
     };
+  }
+
+  // currentUser: User,
+  // ): Promise<
+  //   | {
+  //       list: Task[];
+  //       total: string;
+  //       pageSize: string;
+  //       pageNum: string;
+  //     }
+  //   | ApiResponse<null | string>
+  // >
+
+  async findOneByTaskId(
+    taskId: string,
+    currentUser: User,
+  ): Promise<ApiResponse<Task | string>> {
+    // 判断当前用户是否有权限查看该任务
+    const task = await this.prisma.task.findUnique({
+      where: { taskId },
+    });
+
+    if (!task) return failRes(ServerResponseCode.NOT_FOUND, '任务不存在');
+
+    if (currentUser.role === Role.GUEST)
+      return failRes(ServerResponseCode.FORBIDDEN, '游客无权访问');
+
+    if (
+      currentUser.role === Role.NORMAL &&
+      task.creatorId !== currentUser.id &&
+      task.assigneeId !== currentUser.id
+    )
+      return failRes(ServerResponseCode.FORBIDDEN, '无权查看该任务');
+
+    return successRes(task);
   }
 
   findOne(id: number) {

@@ -37,6 +37,11 @@ export class TaskController {
     return this.taskService.findAll(query, currentUser);
   }
 
+  @Get('/find-one-by-task-id/:id')
+  findOneByTaskId(@Param('id') id: string, @CurrentUser() currentUser: User) {
+    return this.taskService.findOneByTaskId(id, currentUser);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.taskService.findOne(+id);
