@@ -36,13 +36,15 @@ export class TaskService {
     query: QueryTaskDto,
     currentUser: User,
   ): Promise<
-    | {
-        list: Task[];
-        total: string;
-        pageSize: string;
-        pageNum: string;
-      }
-    | ApiResponse<null | string>
+    ApiResponse<
+      | {
+          list: Task[];
+          total: string;
+          pageSize: string;
+          pageNum: string;
+        }
+      | string
+    >
   > {
     if (currentUser.role === Role.GUEST)
       return failRes(
@@ -71,12 +73,12 @@ export class TaskService {
 
     const total = await this.prisma.task.count({ where });
 
-    return {
+    return successRes({
       list,
       total: String(total),
       pageSize,
       pageNum,
-    };
+    });
   }
 
   async findOneByTaskId(
