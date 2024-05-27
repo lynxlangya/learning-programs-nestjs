@@ -87,9 +87,19 @@ export class UserService {
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      this.prisma.user.update({
+        where: { id },
+        data: updateUserDto,
+      });
+      return successRes(null);
+    } catch (error) {
+      return failRes(
+        ServerResponseCode.INTERNAL_SERVER_ERROR,
+        'Failed to update user',
+      );
+    }
   }
 
   async remove(id: string): Promise<User | ApiResponse<null | string>> {

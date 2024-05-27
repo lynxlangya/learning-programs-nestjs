@@ -24,11 +24,8 @@ export class UserController {
 
   @Get()
   findAll(@Query() query: QueryUserDto) {
-    console.log('query', query);
     return this.userService.findAll({
       ...query,
-      // pageNum: +query.pageNum,
-      // pageSize: +query.pageSize,
     });
   }
 
