@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+// import { ChatGateway } from './websocket/chat/chat.gateway';
+import { ChatModule } from './websocket/chat/chat.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     TaskModule,
     PrismaModule,
     AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

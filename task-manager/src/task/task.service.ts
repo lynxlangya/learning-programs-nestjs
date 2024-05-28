@@ -7,10 +7,14 @@ import { successRes, failRes } from '@/common/utils';
 import { ServerResponseCode } from '@/common/enums';
 import { ApiResponse } from '@/common/interfaces';
 import { QueryTaskDto } from './dto/query-task.dto';
+import { ChatGateway } from '@/websocket/chat/chat.gateway';
 
 @Injectable()
 export class TaskService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private chatGateway: ChatGateway,
+  ) {}
 
   async create(
     createTaskDto: CreateTaskDto,
@@ -27,21 +31,43 @@ export class TaskService {
         '管理员必须指定任务接收者',
       );
 
+    // 接受者
+    const assigneeId =
+      currentUser.role === Role.ADMIN
+        ? createTaskDto.assigneeId
+        : currentUser.id;
+
     try {
       await this.prisma.task.create({
         data: {
           ...createTaskDto,
           creatorId: currentUser.id,
           // 只有管理员可以指派任务给别人，普通用户只能给自己指派任务
-          assigneeId:
-            currentUser.role === Role.ADMIN
-              ? createTaskDto.assigneeId
-              : currentUser.id,
+          assigneeId,
           deadlineAt: createTaskDto.deadlineAt
             ? new Date(createTaskDto.deadlineAt)
             : null,
         },
       });
+
+      // 任务创建成功后，通知客户端
+      // this.chatGateway.server.emit('msgToClient', {
+      //   type: 'task',
+      //   action: 'create',
+      //   data: {
+      //     ...createTaskDto,
+      //   },
+      // });
+
+      // 任务创建后，通知接收者
+      this.chatGateway.sendToUser(assigneeId, {
+        type: 'task',
+        action: 'create',
+        data: {
+          ...createTaskDto,
+        },
+      });
+
       return successRes(null);
     } catch (error) {
       return failRes(ServerResponseCode.INTERNAL_SERVER_ERROR, error.message);
