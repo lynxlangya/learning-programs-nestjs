@@ -63,6 +63,7 @@ export class TaskService {
       this.chatGateway.sendToUser(assigneeId, {
         type: 'task',
         action: 'create',
+        info: '你有新的任务，请注意查收！',
         data: {
           ...createTaskDto,
         },
