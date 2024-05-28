@@ -16,11 +16,27 @@ export class TaskService {
     createTaskDto: CreateTaskDto,
     currentUser: User,
   ): Promise<Task | ApiResponse<null | string>> {
+    // 管理员权限下，必须指定任务接收者
+    if (
+      currentUser.role === Role.ADMIN &&
+      !createTaskDto.assigneeId &&
+      createTaskDto.assigneeId !== currentUser.id
+    )
+      return failRes(
+        ServerResponseCode.BAD_REQUEST,
+        '管理员必须指定任务接收者',
+      );
+
     try {
       await this.prisma.task.create({
         data: {
           ...createTaskDto,
           creatorId: currentUser.id,
+          // 只有管理员可以指派任务给别人，普通用户只能给自己指派任务
+          assigneeId:
+            currentUser.role === Role.ADMIN
+              ? createTaskDto.assigneeId
+              : currentUser.id,
           deadlineAt: createTaskDto.deadlineAt
             ? new Date(createTaskDto.deadlineAt)
             : null,
@@ -105,16 +121,33 @@ export class TaskService {
     return successRes(task);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
-  }
-
   update(id: number, updateTaskDto: UpdateTaskDto) {
     console.log(updateTaskDto);
     return `This action updates a #${id} task`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(
+    taskId: string,
+    currentUser: User,
+  ): Promise<ApiResponse<Task | string>> {
+    const task = await this.prisma.task.findUnique({
+      where: { taskId },
+    });
+
+    if (!task) return failRes(ServerResponseCode.NOT_FOUND, '任务不存在');
+
+    if (currentUser.role === Role.GUEST)
+      return failRes(ServerResponseCode.FORBIDDEN, '游客无权操作');
+
+    if (
+      currentUser.role === Role.NORMAL &&
+      task.creatorId !== currentUser.id &&
+      task.assigneeId !== currentUser.id
+    )
+      return failRes(ServerResponseCode.FORBIDDEN, '无权删除该任务');
+
+    await this.prisma.task.delete({ where: { taskId } });
+
+    return successRes(null);
   }
 }
