@@ -121,7 +121,7 @@ export class TaskService {
     return successRes(task);
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
+  update(id: string, updateTaskDto: UpdateTaskDto) {
     console.log(updateTaskDto);
     return `This action updates a #${id} task`;
   }
